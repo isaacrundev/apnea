@@ -117,7 +117,8 @@ Page({
       nx ? `${t(nx.kind === 'hold' ? 'hold' : 'breathe', this.cfg)} ${fmtTime(nx.sec)}` : '',
     )
 
-    // 進入新的閉氣就把上一輪的抽動清掉, 抽動鍵回到可按
+    // 抽動只有閉氣階段有意義: 呼吸時整塊水收起來, 進新的一輪再把上一輪的抽動清掉
+    this.markBtn.setProperty(hmUI.prop.VISIBLE, p.kind === 'hold')
     if (p.kind === 'hold') {
       this.mark = null
       this.markBtn.setProperty(hmUI.prop.TEXT, t('contraction', this.cfg))
