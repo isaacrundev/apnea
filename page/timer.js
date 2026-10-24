@@ -60,9 +60,9 @@ Page({
     this.bg = hmUI.createWidget(hmUI.widget.FILL_RECT, { x: 0, y: 0, w: 480, h: 480, color: 0x101014 })
     const root = screen()
 
-    this.label = this.text(root, 40, 36, 28, '')
-    this.clock = this.text(root, 80, 136, 104, '0:00')
-    this.next = this.text(root, 218, 26, 21, '', 0xc9ccd1)
+    this.label = this.text(root, 40, 44, 28, '')
+    this.clock = this.text(root, 84, 176, 160, '0:00')
+    this.next = this.text(root, 258, 40, 30, '', 0xc9ccd1)
 
     // 抽動: 記下這一輪閉氣走到第幾秒才開始抽動 (再按一次會覆寫). 呼吸階段變成唯讀參考
     this.markBtn = root.createWidget(hmUI.widget.BUTTON, {
@@ -75,7 +75,7 @@ Page({
       press_color: BG[this.q[0].kind],
       text: t('contraction', this.cfg),
       color: 0xffffff,
-      text_size: 30,
+      text_size: 38,
       click_func: () => this.doMark(),
     })
 
@@ -190,7 +190,7 @@ Page({
       h,
       text: lines.join('\n'),
       color: 0xffffff,
-      text_size: 22,
+      text_size: 26,
       align_h: hmUI.align.CENTER_H,
       align_v: hmUI.align.CENTER_V,
     })
