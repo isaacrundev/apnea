@@ -20,6 +20,11 @@ const WATER = { rest: 0x124330, hold: 0x6a231c, done: 0x133a55 }
 // 抽動鍵從這裡到底 = 錶面下 1/3, 像圓形容器裝水到 1/3 高 (圓螢幕自然把左右切齊)
 const WATER_Y = 320
 
+// 三行字 (階段標籤 / 倒數 / 下一階段) 的相對位置與高度, 用來把整團字垂直置中
+const TEXT_DY = [0, 40, 212]
+const TEXT_H = [40, 168, 36]
+const STACK_H = TEXT_DY[2] + TEXT_H[2]
+
 // 一次 session 最長 2 小時: 亮屏與「不准熄屏」都在這個窗內有效
 const SESSION = 2 * 60 * 60 * 1000
 
@@ -60,9 +65,17 @@ Page({
     this.bg = hmUI.createWidget(hmUI.widget.FILL_RECT, { x: 0, y: 0, w: 480, h: 480, color: 0x101014 })
     const root = screen()
 
-    this.label = this.text(root, 40, 44, 28, '')
-    this.clock = this.text(root, 84, 176, 160, '0:00')
-    this.next = this.text(root, 258, 40, 30, '', 0xc9ccd1)
+    // 三行字裝在同一個容器裡, 換階段只要挪這個容器就能整團垂直置中
+    this.stack = root.createWidget(hmUI.widget.VIEW_CONTAINER, {
+      x: 0,
+      y: this.stackTop(this.q[0].kind),
+      w: 480,
+      h: STACK_H,
+      scroll_enable: 0,
+    })
+    this.label = this.text(this.stack, TEXT_DY[0], TEXT_H[0], 28, '')
+    this.clock = this.text(this.stack, TEXT_DY[1], TEXT_H[1], 144, '0:00')
+    this.next = this.text(this.stack, TEXT_DY[2], TEXT_H[2], 30, '', 0xc9ccd1)
 
     // 抽動: 記下這一輪閉氣走到第幾秒才開始抽動 (再按一次會覆寫). 呼吸階段變成唯讀參考
     this.markBtn = root.createWidget(hmUI.widget.BUTTON, {
@@ -82,6 +95,16 @@ Page({
     this.root = root
     this.startPhase(0)
     this.timer = setInterval(() => this.tick(), 250)
+  },
+
+  // 有水時置中在上方 2/3, 沒水 (呼吸) 時置中整個錶面, 下面才不會空一大塊
+  stackTop(kind) {
+    return Math.round(((kind === 'rest' ? 480 : WATER_Y) - STACK_H) / 2)
+  },
+
+  place(kind) {
+    const y = this.stackTop(kind)
+    this.stack.setProperty(hmUI.prop.MORE, { x: 0, y, w: 480, h: STACK_H })
   },
 
   text(root, y, h, size, str, color = 0xffffff) {
@@ -106,6 +129,7 @@ Page({
     this.lastBeep = -1
     this.bg.setProperty(hmUI.prop.MORE, { color: BG[p.kind] })
     this.markBtn.setProperty(hmUI.prop.MORE, { normal_color: WATER[p.kind], press_color: BG[p.kind] })
+    this.place(p.kind)
 
     const n = `${p.round + 1}/${p.rounds}`
     const rep = p.reps > 1 ? ` · ${p.rep + 1}/${p.reps}` : ''
@@ -161,6 +185,7 @@ Page({
     if (this.finished) return
     this.finished = true
     this.bg.setProperty(hmUI.prop.MORE, { color: BG.done })
+    this.place('hold') // 成績接在 320 下面, 字團留在上方
     this.label.setProperty(hmUI.prop.TEXT, '')
     this.clock.setProperty(hmUI.prop.TEXT, t('done', this.cfg))
     this.next.setProperty(hmUI.prop.TEXT, '')
