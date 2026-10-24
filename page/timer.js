@@ -14,6 +14,8 @@ import { notify, cancel, blip } from '../utils/alert'
 import { screen, pad } from '../utils/screen'
 
 const BG = { rest: 0x1e6f50, hold: 0xb03a2e, done: 0x1f618d }
+// 抽動區就是杯底的水: 用該階段底色壓暗的同色系; 按下時亮回底色當回饋
+const WATER = { rest: 0x124330, hold: 0x6a231c, done: 0x133a55 }
 
 // 抽動鍵從這裡到底 = 錶面下 1/3, 像圓形容器裝水到 1/3 高 (圓螢幕自然把左右切齊)
 const WATER_Y = 320
@@ -69,8 +71,8 @@ Page({
       w: 480,
       h: 480 - WATER_Y,
       radius: 0,
-      normal_color: 0x000000,
-      press_color: 0x2c2c34,
+      normal_color: WATER[this.q[0].kind],
+      press_color: BG[this.q[0].kind],
       text: t('contraction', this.cfg),
       color: 0xffffff,
       text_size: 30,
@@ -103,6 +105,7 @@ Page({
     this.startedAt = Date.now()
     this.lastBeep = -1
     this.bg.setProperty(hmUI.prop.MORE, { color: BG[p.kind] })
+    this.markBtn.setProperty(hmUI.prop.MORE, { normal_color: WATER[p.kind], press_color: BG[p.kind] })
 
     const n = `${p.round + 1}/${p.rounds}`
     const rep = p.reps > 1 ? ` · ${p.rep + 1}/${p.reps}` : ''
