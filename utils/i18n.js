@@ -90,7 +90,7 @@ const T = {
     soundOff: '手錶鈴聲已關閉',
     disclaimerTitle: '免責聲明',
     // 手錶一頁看得完的長度: 3 行, 每行不超過 12 字
-    disclaimer: '乾式計時器, 非醫療器材\n閉氣可能導致缺氧昏厥\n水中訓練須有合格潛伴',
+    disclaimer: '本APP僅提供閉氣計時\n嚴禁用於水中閉氣\n並遵從自潛閉氣教材進行練習',
     agree: '同意',
   },
   en: {
@@ -137,7 +137,7 @@ const T = {
     soundOn: 'Sound = watch ringtone',
     soundOff: 'Watch ringtone is off',
     disclaimerTitle: 'DISCLAIMER',
-    disclaimer: 'Dry-land timer, not a medical device\nBreath-holds can cause blackout\nIn water: qualified buddy required',
+    disclaimer: 'This app only times holds\nNever use it in water\nFollow your freediving course',
     agree: 'AGREE',
   },
 }
