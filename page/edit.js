@@ -166,6 +166,8 @@ Page({
 
   commit(row, v) {
     const p = this.cur
+    // 改到閉氣數字就放棄 50% 規則; 先把目前吃到的秒數固定下來, 不然數字會突然跳掉
+    if (row.pctOff && p.pct) p.holdStart = holdSec(p, this.cfg.maxSTA)
     p[row.key] = Math.min(row.max, Math.max(row.min, v))
     if (row.pctOff) p.pct = null
     this.values[row.key].setProperty(hmUI.prop.TEXT, this.show(row))
