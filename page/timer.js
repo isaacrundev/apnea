@@ -1,5 +1,4 @@
 import * as hmUI from '@zos/ui'
-import { back } from '@zos/router'
 import {
   setPageBrightTime,
   resetPageBrightTime,
@@ -15,6 +14,9 @@ import { notify, cancel, blip } from '../utils/alert'
 import { screen, pad } from '../utils/screen'
 
 const BG = { rest: 0x1e6f50, hold: 0xb03a2e, done: 0x1f618d }
+
+// 抽動鍵從這裡到底 = 錶面下 1/3, 像圓形容器裝水到 1/3 高 (圓螢幕自然把左右切齊)
+const WATER_Y = 320
 
 // 一次 session 最長 2 小時: 亮屏與「不准熄屏」都在這個窗內有效
 const SESSION = 2 * 60 * 60 * 1000
@@ -45,7 +47,6 @@ Page({
     this.idx = 0
     this.endsAt = 0
     this.startedAt = 0
-    this.paused = false
     this.finished = false
     this.mark = null // 這一輪的抽動秒數 (閉氣已過幾秒)
     this.marks = {} // phase idx → 抽動秒數
@@ -63,36 +64,18 @@ Page({
 
     // 抽動: 記下這一輪閉氣走到第幾秒才開始抽動 (再按一次會覆寫). 呼吸階段變成唯讀參考
     this.markBtn = root.createWidget(hmUI.widget.BUTTON, {
-      x: 130,
-      y: 250,
-      w: 220,
-      h: 60,
-      radius: 30,
+      x: 0,
+      y: WATER_Y,
+      w: 480,
+      h: 480 - WATER_Y,
+      radius: 0,
       normal_color: 0x000000,
-      press_color: 0x000000,
+      press_color: 0x2c2c34,
       text: t('contraction', this.cfg),
       color: 0xffffff,
-      text_size: 26,
+      text_size: 30,
       click_func: () => this.doMark(),
     })
-
-    // 播放器式圖示按鈕 (圖檔來源 scripts/icons.mjs), 三顆拼成一個膠囊
-    const pill = (x, w, name, fn) =>
-      root.createWidget(hmUI.widget.BUTTON, {
-        x,
-        y: 314,
-        w,
-        h: 84,
-        normal_src: `images/${name}_n.png`,
-        press_src: `images/${name}_p.png`,
-        click_func: fn,
-      })
-
-    pill(56, 123, 'skip', () => this.skip())
-    this.pauseBtn = pill(179, 122, 'pause', () => this.togglePause())
-    this.playBtn = pill(179, 122, 'play', () => this.togglePause())
-    this.playBtn.setProperty(hmUI.prop.VISIBLE, false)
-    pill(301, 123, 'stop', () => this.stop())
 
     this.root = root
     this.startPhase(0)
@@ -140,7 +123,7 @@ Page({
   },
 
   tick() {
-    if (this.finished || this.paused) return
+    if (this.finished) return
     // 系統可能把暫停熄屏清掉 (例如中途按鍵亮/熄屏), 每 10 秒補一次
     if (Date.now() >= (this.awakeAt || 0)) {
       this.awakeAt = Date.now() + 10000
@@ -162,38 +145,12 @@ Page({
 
   doMark() {
     const p = this.q[this.idx]
-    if (this.finished || this.paused || p.kind !== 'hold') return
-    // 用「這段開始後過了多久」算, 暫停時 startedAt 會往後補, 數字不會虛胖
+    if (this.finished || p.kind !== 'hold') return
+    // 用「這段開始後過了多久」算, 秒數不會虛胖
     this.mark = Math.round((Date.now() - this.startedAt) / 1000)
     this.marks[this.idx] = this.mark
     this.markBtn.setProperty(hmUI.prop.TEXT, `${t('contraction', this.cfg)} ${fmtTime(this.mark)}`)
     blip()
-  },
-
-  setPaused(on) {
-    this.paused = on
-    this.pauseBtn.setProperty(hmUI.prop.VISIBLE, !on)
-    this.playBtn.setProperty(hmUI.prop.VISIBLE, on)
-  },
-
-  togglePause() {
-    if (this.finished) return
-    if (this.paused) {
-      // 暫停期間不算進閉氣時間: 起點跟結束點一起往後推
-      const gap = Date.now() - this.pauseAt
-      this.endsAt += gap
-      this.startedAt += gap
-    } else {
-      this.pauseAt = Date.now()
-    }
-    this.setPaused(!this.paused)
-  },
-
-  skip() {
-    if (this.finished) return
-    if (this.paused) this.setPaused(false)
-    if (this.idx + 1 >= this.q.length) return this.finish()
-    this.startPhase(this.idx + 1)
   },
 
   finish() {
@@ -220,7 +177,7 @@ Page({
         `${p.round + 1}${rep}   ${fmtTime(p.sec)}   ${t('contraction', this.cfg)} ${m ? fmtTime(m) : '—'}`,
       )
     })
-    const y = 414
+    const y = WATER_Y
     const h = lines.length * 32
     this.root.createWidget(hmUI.widget.TEXT, {
       x: 0,
@@ -235,13 +192,6 @@ Page({
     })
     pad(this.root, y + h)
     hmUI.redraw()
-  },
-
-  stop() {
-    cancel()
-    letSleep()
-    // back 是「回上一頁」: 用 replace 會在主畫面上再疊一層主畫面
-    back()
   },
 
   onDestroy() {
