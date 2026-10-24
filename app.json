@@ -24,7 +24,7 @@
     "default": {
       "module": {
         "page": {
-          "pages": ["page/menu", "page/edit", "page/timer", "page/test", "page/settings"]
+          "pages": ["page/agree", "page/menu", "page/edit", "page/timer", "page/test", "page/settings"]
         }
       },
       "platforms": [

@@ -33,8 +33,8 @@ Page({
       push({ url: 'page/test' }),
     )
 
-    this.line(root, 448, 32, 18, t('safety', c), 0x6f7276)
-    pad(root, 480)
+    // 免責聲明在 page/agree, 這裡不再重複一次
+    pad(root, 440)
   },
 
   line(root, y, h, size, text, color = 0xffffff) {

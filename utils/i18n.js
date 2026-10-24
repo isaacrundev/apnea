@@ -88,7 +88,10 @@ const T = {
     hintMax: 'CO2 表的閉氣時間 = 這個值的 50%',
     soundOn: '音效 = 手錶鈴聲',
     soundOff: '手錶鈴聲已關閉',
-    safety: '陸上乾式訓練；水中訓練須有合格潛伴',
+    disclaimerTitle: '免責聲明',
+    // 手錶一頁看得完的長度: 3 行, 每行不超過 12 字
+    disclaimer: '乾式計時器, 非醫療器材\n閉氣可能導致缺氧昏厥\n水中訓練須有合格潛伴',
+    agree: '同意',
   },
   en: {
     title: 'APNEA',
@@ -133,6 +136,8 @@ const T = {
     hintMax: 'CO2 table holds 50% of this',
     soundOn: 'Sound = watch ringtone',
     soundOff: 'Watch ringtone is off',
-    safety: 'Dry training only; in water you need a buddy',
+    disclaimerTitle: 'DISCLAIMER',
+    disclaimer: 'Dry-land timer, not a medical device\nBreath-holds can cause blackout\nIn water: qualified buddy required',
+    agree: 'AGREE',
   },
 }
