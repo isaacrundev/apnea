@@ -28,6 +28,8 @@ zeus preview --target "Amazfit Balance 2"   # 產生 QR code，裝到真錶
 - `utils/picker.js` — 系統轉盤（`WIDGET_PICKER`）的共用外殼
 - `utils/screen.js` — 480×480 圓屏的縱向捲動容器
 - `scripts/icons.mjs` — 產生按鈕圖示與桌面圖示（`node scripts/icons.mjs`）
+- `scripts/shots.mjs` — 真錶截圖 → 商店用的 360×360 圓形截圖
+- `scripts/png.mjs` — 自己寫的 PNG 讀寫（8-bit、非交錯），給上面兩支用
 
 ## 表的模型
 
@@ -66,6 +68,17 @@ zeus preview --target "Amazfit Balance 2"   # 產生 QR code，裝到真錶
 
 倒數頁一 build 就 `keepAwake()`：`setPageBrightTime`（2 小時）＋ `pauseDropWristScreenOff` / `pausePalmScreenOff`，`tick()` 每 10 秒補一次。
 躺著練最容易落腕與蓋掌熄屏，而小程式息屏 10 秒就被系統收掉——倒數和提示會整個斷掉，所以這兩個手勢一定要一起暫停。
+
+## 上架素材
+
+商店後台（console.zepp.com）要的圖只有兩張格式要求，都用程式生，不用開繪圖軟體：
+
+```bash
+node scripts/icons.mjs    # assets/store/icon-240.png  ← 240×240 透明圓形 icon
+node scripts/shots.mjs    # assets/store/shot-*.png    ← 360×360 透明圓形截圖
+```
+
+截圖要先把真錶截圖（480×480 png，Zepp App 開發者模式的「手錶截圖」）丟進 `assets/store/raw/`，再跑 `scripts/shots.mjs`：它會縮成 360×360、把四角遮成透明圓（圓外不留邊）。每個上架語系至少 3 張。
 
 ## 語言
 
