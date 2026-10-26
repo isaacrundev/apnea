@@ -9,10 +9,13 @@ Amazfit Balance 2（Zepp OS 5 / API_LEVEL 4.2）用的**乾式靜態閉氣**訓�
 npm i -g @zeppos/zeus-cli   # 已裝可略過
 zeus login
 zeus dev                    # 模擬器
-zeus preview --target "Amazfit Balance 2"   # 產生 QR code，裝到真錶
+bash scripts/watch-install.sh                # 直接裝到真錶（手機端 Zepp app 要先開 Bridge）
+zeus preview --target "Amazfit Balance 2"    # 或產生 QR code 掃進真錶
 ```
 
-裝到真錶：Zepp App →「我的 → 設定 → 關於」連點 Zepp 圖示 7 次 → 開發者模式 →「掃一掃」掃 terminal 的 QR。
+直接安裝：手機 Zepp App →「我的 → 設定 → 關於」連點 Zepp 圖示 7 次 → 開發者模式 → 打開 Bridge，然後在電腦跑 `bash scripts/watch-install.sh`（約 15 秒，`exit 0` = 手錶回報安裝成功）。
+
+掃 QR（bridge 連不上時的備援）：同一頁的「掃一掃」掃 terminal 的 QR。
 
 ## 檔案
 
