@@ -12,4 +12,8 @@ selenium-debug.log
 *.suo
 *.ntvs*
 *.njsproj
-*.slnassets/store/raw/
+*.sln
+
+# 真錶截圖原件 (可能有個資) 及其產生物, 都不進版控
+assets/store/raw/
+assets/store/shot-*.png
