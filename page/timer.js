@@ -35,6 +35,9 @@ const GREY = 0x8b9096
 // 一次 session 最長 2 小時: 亮屏與「不准熄屏」都在這個窗內有效
 const SESSION = 2 * 60 * 60 * 1000
 
+// 環每 60ms 補一格: 一秒才動一次的話尖端是一跳 40px, 看起來就是「停一下再走」
+const TICK = 60
+
 // 躺著閉氣最容易觸發落腕與蓋掌熄屏, 而小程式息屏 10 秒就被系統收掉, 倒數與提示會全斷
 function keepAwake() {
   try {
@@ -109,7 +112,7 @@ Page({
 
     this.root = root
     this.startPhase(0)
-    this.timer = setInterval(() => this.tick(), 250)
+    this.timer = setInterval(() => this.tick(), TICK)
   },
 
   moveStack(y) {
@@ -146,6 +149,7 @@ Page({
     this.endsAt = Date.now() + p.sec * 1000
     this.startedAt = Date.now()
     this.lastBeep = -1
+    this.lastSec = -1
     // 新的一段從 12 點鐘重新長出來
     this.arc.setProperty(hmUI.prop.MORE, { color: ACCENT[p.kind], start_angle: TOP, end_angle: TOP })
 
@@ -184,10 +188,13 @@ Page({
     if (left <= 0) return this.finish()
     const p = this.q[this.idx]
     const s = Math.ceil(left / 1000)
-    this.clock.setProperty(hmUI.prop.TEXT, fmtTime(s))
-    // 錶冠 (弧的頭) 跟著倒數走: 已經過的秒數佔這段的比例
+    if (s !== this.lastSec) {
+      this.lastSec = s
+      this.clock.setProperty(hmUI.prop.TEXT, fmtTime(s))
+    }
+    // 錶冠 (弧的頭) 跟著倒數連續走: 比例直接吃毫秒, 不取整到秒
     const prog = Math.min(1, Math.max(0, 1 - left / (p.sec * 1000)))
-    this.arc.setProperty(hmUI.prop.MORE, { end_angle: Math.round(TOP + 360 * prog) })
+    this.arc.setProperty(hmUI.prop.MORE, { end_angle: TOP + 360 * prog })
     if (s <= 3 && s !== this.lastBeep) {
       this.lastBeep = s
       notify('tick', this.cfg)
