@@ -14,14 +14,14 @@ const ITEMS = [
   { label: 'maxTest', page: 'page/test' },
 ]
 
-const BTN = { x: 60, w: 360, radius: 32 }
+const BTN = { x: 70, w: 340, radius: 32 }
 // 每格的中心間距一樣 (56), 高度不同所以 y 不是等差
 const SLOTS = [
-  { y: 168, h: 40, size: 26, color: 0x000000 },
-  { y: 224, h: 40, size: 26, color: 0x555a60 },
-  { y: 268, h: 64, size: 40, color: 0xffffff },
-  { y: 336, h: 40, size: 26, color: 0x555a60 },
-  { y: 392, h: 40, size: 26, color: 0x000000 },
+  { y: 192, h: 40, size: 26, color: 0x000000 },
+  { y: 248, h: 40, size: 26, color: 0x555a60 },
+  { y: 292, h: 64, size: 40, color: 0xffffff },
+  { y: 360, h: 40, size: 26, color: 0x555a60 },
+  { y: 416, h: 40, size: 26, color: 0x000000 },
 ]
 const FRAMES = 6
 const FRAME_MS = 22
@@ -43,9 +43,9 @@ Page({
 
     // 標題 48px 放得下 2~5 個字 (閉氣訓練器 = 5), 再長 (APNEA TRAINER = 13) 就縮一級才不會溢出 480
     const title = t('title', c)
-    this.line(root, 40, 56, title.length > 8 ? 36 : 48, title)
-    this.line(root, 100, 30, 24, summary(c), 0x8e9196)
-    this.line(root, 130, 26, 22, `${t('maxSTA', c)} ${fmtTime(c.maxSTA)}`, 0x6f7276)
+    this.line(root, 64, 56, title.length > 8 ? 36 : 48, title)
+    this.line(root, 124, 30, 24, summary(c), 0x8e9196)
+    this.line(root, 154, 26, 22, `${t('maxSTA', c)} ${fmtTime(c.maxSTA)}`, 0x6f7276)
 
     // cell 跟著 widget 一起在陣列裡輪轉, 所以點擊時用它現在的索引判斷角色
     this.cells = SLOTS.map((s, k) => {
@@ -54,8 +54,8 @@ Page({
       return cell
     })
 
-    // 五格都在 480 內 (472 < 480), 不靠捲動, 上下滑留給 gesture
-    pad(root, 392)
+    // 內容正好 480 高 (400 + 80 底墊), 不靠捲動, 上下滑留給 gesture
+    pad(root, 400)
 
     onGesture({
       callback: (event) => {
