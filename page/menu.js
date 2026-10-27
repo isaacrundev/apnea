@@ -15,7 +15,9 @@ Page({
     const c = load()
     const root = screen()
 
-    this.line(root, 52, 56, 48, t('title', c))
+    // 標題 48px 放得下 2~5 個字 (閉氣訓練器 = 5), 再長 (APNEA TRAINER = 13) 就縮一級才不會溢出 480
+    const title = t('title', c)
+    this.line(root, 52, 56, title.length > 8 ? 36 : 48, title)
     this.line(root, 112, 34, 24, summary(c), 0x8e9196)
     this.line(root, 148, 30, 22, `${t('maxSTA', c)} ${fmtTime(c.maxSTA)}`, 0x6f7276)
 
