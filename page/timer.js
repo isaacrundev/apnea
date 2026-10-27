@@ -16,7 +16,7 @@ import { screen, pad } from '../utils/screen'
 const BG = 0x101014
 // 圓環就是進度條: 軌道固定, 進度弧的「錶冠」(弧的頭) 隨倒數順時針跑, 一圈走完 = 這段結束
 const TRACK = 0x26262b
-const RING = { x: 18, y: 18, w: 444, h: 444, line_width: 16 }
+const RING = { x: 10, y: 10, w: 460, h: 460, line_width: 20 }
 // ARC 的 0 度在 3 點鐘方向, -90 就是 12 點鐘
 const TOP = -90
 // 階段主色只上在進度弧與階段名上, 底色一律深灰 (整片變色會蓋掉環)
