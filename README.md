@@ -22,7 +22,7 @@ zeus preview --target "Amazfit Balance 2"    # 或產生 QR code 掃進真錶
 - `page/agree.js` — 免責聲明（開 app 第一頁，按「同意」才進主選單，每次開啟都要確認）
 - `page/menu.js` — 主選單（開始 / 預設 / 設定 / 最大閉氣測試 + 目前這組的摘要）
 - `page/edit.js` — 5 組預設的編輯頁（1–5 切換，6 個數字，點數值開轉盤）
-- `page/timer.js` — 倒數頁（階段背景色、抽動記錄、播放器式圖示按鈕、結束後的每輪明細）
+- `page/timer.js` — 倒數頁（圓環進度條、抽動記錄、結束後的每輪明細）
 - `page/test.js` — 最大閉氣測試（往上數的碼錶，按停止寫回 maxSTA）
 - `page/settings.js` — 最大閉氣 / 語言 / 提示方式 / 震動長度 / 最後 3 秒
 - `utils/store.js` — 設定讀寫（5 組預設 + maxSTA + 提示/語言）
