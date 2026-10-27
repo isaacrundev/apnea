@@ -42,9 +42,10 @@ Page({
 
   paint() {
     const at = (d) => t(ITEMS[(this.i + d + ITEMS.length) % ITEMS.length].label, this.c)
-    this.up.setProperty(hmUI.prop.MORE, { text: at(-1) })
-    this.mid.setProperty(hmUI.prop.MORE, { text: at(0) })
-    this.down.setProperty(hmUI.prop.MORE, { text: at(1) })
+    // BUTTON 的 setProperty 少了 x/y/w/h 會被忽略, 即使只改 text 也要整組帶上
+    this.up.setProperty(hmUI.prop.MORE, { ...BTN, y: 170, h: NEAR.h, text: at(-1) })
+    this.mid.setProperty(hmUI.prop.MORE, { ...BTN, y: MID.y, h: MID.h, text: at(0) })
+    this.down.setProperty(hmUI.prop.MORE, { ...BTN, y: 280, h: NEAR.h, text: at(1) })
   },
 
   move(d) {
