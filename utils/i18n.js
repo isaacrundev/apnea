@@ -94,7 +94,7 @@ const T = {
     agree: '同意',
   },
   en: {
-    title: 'APNEA',
+    title: 'APNEA TRAINER',
     start: 'START',
     presets: 'PRESETS',
     settings: 'SETTINGS',

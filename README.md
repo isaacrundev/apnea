@@ -1,4 +1,4 @@
-# Apnea
+# Apnea Trainer
 
 Amazfit Balance 2（Zepp OS 5 / API_LEVEL 4.2）用的**乾式靜態閉氣**訓練計時器。純手錶端，不需要手機端。
 預設表來自 AIDA3 手冊第 8 章（CO2 表 圖17），O2 表為暫代值。
