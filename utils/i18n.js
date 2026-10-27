@@ -46,7 +46,7 @@ export function summary(cfg) {
 
 const T = {
   zh: {
-    title: '閉氣',
+    title: '閉氣訓練器',
     start: '開始',
     presets: '預設',
     settings: '設定',
