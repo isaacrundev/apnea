@@ -5,8 +5,8 @@ import { t, summary, fmtTime } from '../utils/i18n'
 import { screen, pad } from '../utils/screen'
 
 const BTN = {
-  x: 64,
-  w: 352,
+  x: 90,
+  w: 300,
   radius: 36,
   color: 0xffffff,
   text_size: 32,
@@ -60,7 +60,7 @@ Page({
       ...BTN,
       ...geo,
       text,
-      // 同標題: 長標籤 (MAX HOLD TEST = 13) 用 32px 會超出 352 寬, 縮一級就放得下
+      // 同標題: 長標籤 (MAX HOLD TEST = 13) 用 32px 會超出 300 寬, 縮一級就放得下
       text_size: text.length > 10 ? 26 : BTN.text_size,
       normal_color: normal,
       press_color: press,
