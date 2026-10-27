@@ -17,11 +17,11 @@ const ITEMS = [
 const BTN = { x: 60, w: 360, radius: 32 }
 // 每格的中心間距一樣 (56), 高度不同所以 y 不是等差
 const SLOTS = [
-  { y: 140, h: 40, size: 26, color: 0x000000 },
-  { y: 196, h: 40, size: 26, color: 0x555a60 },
-  { y: 240, h: 64, size: 40, color: 0xffffff },
-  { y: 308, h: 40, size: 26, color: 0x555a60 },
-  { y: 364, h: 40, size: 26, color: 0x000000 },
+  { y: 168, h: 40, size: 26, color: 0x000000 },
+  { y: 224, h: 40, size: 26, color: 0x555a60 },
+  { y: 268, h: 64, size: 40, color: 0xffffff },
+  { y: 336, h: 40, size: 26, color: 0x555a60 },
+  { y: 392, h: 40, size: 26, color: 0x000000 },
 ]
 const FRAMES = 6
 const FRAME_MS = 22
@@ -54,8 +54,8 @@ Page({
       return cell
     })
 
-    // 五格都在 480 內 (440 < 480), 不靠捲動, 上下滑留給 gesture
-    pad(root, 360)
+    // 五格都在 480 內 (472 < 480), 不靠捲動, 上下滑留給 gesture
+    pad(root, 392)
 
     onGesture({
       callback: (event) => {
