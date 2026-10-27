@@ -31,10 +31,10 @@ Page({
     this.line(root, 134, 26, 22, `${t('maxSTA', c)} ${fmtTime(c.maxSTA)}`, 0x6f7276)
 
     // 點鄰居 = 把它移到中間, 點中間那行 = 選定進下一頁
-    this.up = this.opt(root, { ...NEAR, y: 170 }, () => this.move(-1))
-    this.mid = this.opt(root, MID, () => push({ url: ITEMS[this.i].page }))
-    this.down = this.opt(root, { ...NEAR, y: 280 }, () => this.move(1))
-    this.paint()
+    const at = (d) => t(ITEMS[(this.i + d + ITEMS.length) % ITEMS.length].label, c)
+    this.up = this.opt(root, { ...NEAR, y: 170 }, at(-1), () => this.move(-1))
+    this.mid = this.opt(root, MID, at(0), () => push({ url: ITEMS[this.i].page }))
+    this.down = this.opt(root, { ...NEAR, y: 280 }, at(1), () => this.move(1))
 
     // 只有三行, 不用捲動
     pad(root, 340)
@@ -42,9 +42,9 @@ Page({
 
   paint() {
     const at = (d) => t(ITEMS[(this.i + d + ITEMS.length) % ITEMS.length].label, this.c)
-    this.up.setText(at(-1))
-    this.mid.setText(at(0))
-    this.down.setText(at(1))
+    this.up.setProperty(hmUI.prop.MORE, { text: at(-1) })
+    this.mid.setProperty(hmUI.prop.MORE, { text: at(0) })
+    this.down.setProperty(hmUI.prop.MORE, { text: at(1) })
   },
 
   move(d) {
@@ -67,12 +67,12 @@ Page({
   },
 
   // 外框塗成背景黑 = 看起來只有字, 但還能吃到點擊
-  opt(root, { y, h, size, color, press }, fn) {
+  opt(root, { y, h, size, color, press }, text, fn) {
     return root.createWidget(hmUI.widget.BUTTON, {
       ...BTN,
       y,
       h,
-      text: '',
+      text,
       color,
       text_size: size,
       normal_color: 0x000000,
