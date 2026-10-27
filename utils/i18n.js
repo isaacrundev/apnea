@@ -98,7 +98,7 @@ const T = {
     start: 'START',
     presets: 'PRESETS',
     settings: 'SETTINGS',
-    maxTest: 'MAX HOLD TEST',
+    maxTest: 'HOLD TEST',
     maxSTA: 'Max hold',
     hold: 'HOLD',
     breathe: 'BREATHE',

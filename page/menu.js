@@ -4,17 +4,24 @@ import { load } from '../utils/store'
 import { t, summary, fmtTime } from '../utils/i18n'
 import { screen, pad } from '../utils/screen'
 
-const BTN = {
-  x: 90,
-  w: 300,
-  radius: 36,
-  color: 0xffffff,
-  text_size: 32,
-}
+// 主畫面是直式 carousel: 中間那行才是現在選的, 上下兩行是鄰居 (淡色), 沒有按鈕外框
+const ITEMS = [
+  { label: 'start', page: 'page/timer' },
+  { label: 'presets', page: 'page/edit' },
+  { label: 'settings', page: 'page/settings' },
+  { label: 'maxTest', page: 'page/test' },
+]
+
+const BTN = { x: 60, w: 360, radius: 32 }
+const MID = { y: 212, h: 64, size: 40, color: 0xffffff, press: 0x1e1e22 }
+// 鄰居用暗灰當「淡出」: 手錶的 TEXT 沒有透明度, 只能靠顏色退到背景
+const NEAR = { h: 40, size: 26, color: 0x555a60, press: 0x1a1a1e }
 
 Page({
   build() {
     const c = load()
+    this.c = c
+    this.i = 0
     const root = screen()
 
     // 標題 48px 放得下 2~5 個字 (閉氣訓練器 = 5), 再長 (APNEA TRAINER = 13) 就縮一級才不會溢出 480
@@ -23,22 +30,26 @@ Page({
     this.line(root, 104, 30, 24, summary(c), 0x8e9196)
     this.line(root, 134, 26, 22, `${t('maxSTA', c)} ${fmtTime(c.maxSTA)}`, 0x6f7276)
 
-    // 四顆按鈕一律同寬縱向排; 排不進 480 就讓使用者往下滑, 不為了塞進圓裡縮字
-    this.btn(root, { y: 172, h: 72 }, t('start', c), 0xd94a3d, 0xa8342a, () =>
-      push({ url: 'page/timer' }),
-    )
-    this.btn(root, { y: 254, h: 64 }, t('presets', c), 0x2c2c30, 0x50505a, () =>
-      push({ url: 'page/edit' }),
-    )
-    this.btn(root, { y: 326, h: 64 }, t('settings', c), 0x2c2c30, 0x50505a, () =>
-      push({ url: 'page/settings' }),
-    )
-    this.btn(root, { y: 398, h: 64 }, t('maxTest', c), 0x2c2c30, 0x50505a, () =>
-      push({ url: 'page/test' }),
-    )
+    // 點鄰居 = 把它移到中間, 點中間那行 = 選定進下一頁
+    this.up = this.opt(root, { ...NEAR, y: 170 }, () => this.move(-1))
+    this.mid = this.opt(root, MID, () => push({ url: ITEMS[this.i].page }))
+    this.down = this.opt(root, { ...NEAR, y: 280 }, () => this.move(1))
+    this.paint()
 
-    // 免責聲明在 page/agree, 這裡不再重複一次. 墊到 480 讓最後一顆滑到底時整個落在圓內
-    pad(root, 480)
+    // 只有三行, 不用捲動
+    pad(root, 340)
+  },
+
+  paint() {
+    const at = (d) => t(ITEMS[(this.i + d + ITEMS.length) % ITEMS.length].label, this.c)
+    this.up.setText(at(-1))
+    this.mid.setText(at(0))
+    this.down.setText(at(1))
+  },
+
+  move(d) {
+    this.i = (this.i + d + ITEMS.length) % ITEMS.length
+    this.paint()
   },
 
   line(root, y, h, size, text, color = 0xffffff) {
@@ -55,14 +66,16 @@ Page({
     })
   },
 
-  btn(root, geo, text, normal, press, fn) {
+  // 外框塗成背景黑 = 看起來只有字, 但還能吃到點擊
+  opt(root, { y, h, size, color, press }, fn) {
     return root.createWidget(hmUI.widget.BUTTON, {
       ...BTN,
-      ...geo,
-      text,
-      // 同標題: 長標籤 (MAX HOLD TEST = 13) 用 32px 會超出 300 寬, 縮一級就放得下
-      text_size: text.length > 10 ? 26 : BTN.text_size,
-      normal_color: normal,
+      y,
+      h,
+      text: '',
+      color,
+      text_size: size,
+      normal_color: 0x000000,
       press_color: press,
       click_func: fn,
     })
